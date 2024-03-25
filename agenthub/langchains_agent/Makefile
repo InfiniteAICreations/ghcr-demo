@@ -1,6 +1,6 @@
 REGISTRY=ghcr.io
 ORG=infiniteaicreations
-REPO=eval-swe-bench
+REPO=langchains_agent
 TAG=v0.1
 FULL_IMAGE=$(REGISTRY)/$(ORG)/$(REPO):$(TAG)
 LATEST_FULL_IMAGE=$(REGISTRY)/$(ORG)/$(REPO):latest
