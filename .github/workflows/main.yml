@@ -39,10 +39,10 @@ jobs:
 
       - name: Build and push multi-arch container images
         run: |
-          # Find directories containing Dockerfile but not containing .ignoredockerfile
+          # Find directories containing Dockerfile but not containing .dockerfileignore
           while IFS= read -r dockerfile_dir; do
-              # Check if .ignoredockerfile exists in the directory
-              if [ ! -f "$dockerfile_dir/.ignoredockerfile" ]; then
+              # Check if .dockerfileignore exists in the directory
+              if [ ! -f "$dockerfile_dir/.dockerfileignore" ]; then
                   # Change directory and execute 'make all'
                   pushd "$dockerfile_dir" > /dev/null
                   make all
@@ -50,8 +50,8 @@ jobs:
               fi
           done < <(find . -type f -name Dockerfile -exec dirname {} \; | sort -u)
 
-#          # Find directories containing Dockerfile but not containing .ignoredockerfile
-#          for dockerfile_dir in $(find . -type f -name Dockerfile -exec dirname {} \; | sort -u | grep -v "$(find . -type f -name .ignoredockerfile -exec dirname {} \; | sort -u)"); do
+#          # Find directories containing Dockerfile but not containing .dockerfileignore
+#          for dockerfile_dir in $(find . -type f -name Dockerfile -exec dirname {} \; | sort -u | grep -v "$(find . -type f -name .dockerfileignore -exec dirname {} \; | sort -u)"); do
 #              # Change directory and execute 'make all'
 #              pushd $dockerfile_dir > /dev/null
 #              make all
