@@ -34,7 +34,7 @@ jobs:
           GHCR_PAT: ${{ secrets.GHCR_PAT }}
 
 #      - name: Read version from VERSION file
-#        id: readv
+#        id:  readv
 #        uses: jaywcjlove/github-action-read-file@v2
 #        with:
 #          path: opendevin/sandbox/VERSION
