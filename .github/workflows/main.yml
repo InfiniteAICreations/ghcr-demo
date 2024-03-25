@@ -51,6 +51,10 @@ jobs:
           echo "==========="
           # Find directories containing Dockerfile but not containing .dockerfileignore
           while IFS= read -r dockerfile_dir; do
+              # if the Dockerfile has not changed, skip the build
+              if git diff --quiet --exit-code "$dockerfile_dir/Dockerfile"; then
+                continue
+              fi
               # Check if .dockerfileignore exists in the directory
               if [ ! -f "$dockerfile_dir/.dockerfileignore" ]; then
                   # Change directory and execute 'make all'
