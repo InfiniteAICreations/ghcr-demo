@@ -2,8 +2,8 @@ REGISTRY=ghcr.io
 ORG=infiniteaicreations
 REPO=ghcr-demo
 TAG=v0.1
-FULL_IMAGE=$(REGISTRY)/$(ORG)/$(REPO):$(TAG)
-LATEST_FULL_IMAGE=$(REGISTRY)/$(ORG)/$(REPO):latest
+FULL_IMAGE=$(REPO):$(TAG)
+LATEST_FULL_IMAGE=$(REPO):latest
 
 # normally, for local build testing or development. use cross platform build for sharing images to others.
 build:
