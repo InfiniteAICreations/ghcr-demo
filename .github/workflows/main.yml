@@ -1,0 +1,43 @@
+name: Build and publish multi-arch container images
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Why ?'
+        required: false
+        default: ''
+
+jobs:
+  ghr_push:
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push'
+
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v3
+
+      - name: Set up Docker Buildx
+        id: buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log-in to ghcr.io
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login https://ghcr.io -u ${{ github.actor }} --password-stdin
+
+#      - name: Read version from VERSION file
+#        id: readv
+#        uses: jaywcjlove/github-action-read-file@v2
+#        with:
+#          path: opendevin/sandbox/VERSION
+
+      - name: Build and push multi-arch container images
+        run: |
+          cd opendevin/sandbox
+          make all
