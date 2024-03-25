@@ -44,6 +44,10 @@ jobs:
 
       - name: Build and push multi-arch container images
         run: |
+          echo "==========="
+          echo $DOCKER_BUILD_ORG
+          echo $DOCKER_BUILD_REPO
+          echo "==========="
           # Find directories containing Dockerfile but not containing .dockerfileignore
           while IFS= read -r dockerfile_dir; do
               # Check if .dockerfileignore exists in the directory
