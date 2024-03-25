@@ -31,7 +31,20 @@ jobs:
       - name: Log-in to ghcr.io
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-#      - name: Read version from VERSION file
+      - name: Extract Org and Repo Name
+        run: |
+          export DOCKER_BUILD_ORG=$(echo "${GITHUB_REPOSITORY}" | cut -d '/' -f 1)
+          export DOCKER_BUILD_REPO=$(echo "${GITHUB_REPOSITORY}" | cut -d '/' -f 2)
+        shell: bash
+
+      - name: Set Environment Variables
+        env:
+          DOCKER_BUILD_ORG: ${{ env.DOCKER_BUILD_ORG }}
+          DOCKER_BUILD_REPO: ${{ env.DOCKER_BUILD_REPO }}
+        run: echo "DOCKER_BUILD_ORG=${DOCKER_BUILD_ORG}, DOCKER_BUILD_REPO=${DOCKER_BUILD_REPO}"
+
+
+      #      - name: Read version from VERSION file
 #        id: readv
 #        uses: jaywcjlove/github-action-read-file@v2
 #        with:
