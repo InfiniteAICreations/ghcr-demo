@@ -15,23 +15,27 @@ on:
 jobs:
   ghr_push:
     runs-on: ubuntu-latest
-    if: |
-      need_build=false
-      # Find directories containing Dockerfile but not containing .dockerfileignore
-      while IFS= read -r dockerfile_dir; do
-          # if the Dockerfile has not changed, skip the build
-          if git diff --quiet --exit-code "$dockerfile_dir/Dockerfile"; then
-            continue
-          fi
-          need_build=true
-      done < <(find . -type f -name Dockerfile -exec dirname {} \; | sort -u)
-      echo "$need_build"
-      echo "$GITHUB_EVENT_NAME"
-      [[ $GITHUB_EVENT_NAME == "push" && "$need_build" == true ]]
+    if: github.event_name == 'push'
 
     steps:
       - name: checkout
         uses: actions/checkout@v4
+
+      - name: Confirm Dockerfile is changed
+        run: |
+          need_build=false
+          # Find directories containing Dockerfile but not containing .dockerfileignore
+          while IFS= read -r dockerfile_dir; do
+              # if the Dockerfile has not changed, skip the build
+              if git diff --quiet --exit-code "$dockerfile_dir/Dockerfile"; then
+                continue
+              fi
+              need_build=true
+          done < <(find . -type f -name Dockerfile -exec dirname {} \; | sort -u)
+          if [ "$need_build" = false ]; then
+            echo "No Dockerfile changed, skip the build"
+            exit 0;
+          fi
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
