@@ -25,7 +25,9 @@ jobs:
           fi
           need_build=true
       done < <(find . -type f -name Dockerfile -exec dirname {} \; | sort -u)
-      [[ $GITHUB_EVENT_NAME == "push" && $need_build == true ]]
+      echo "$need_build"
+      echo "$GITHUB_EVENT_NAME"
+      [[ $GITHUB_EVENT_NAME == "push" && "$need_build" == true ]]
 
     steps:
       - name: checkout
