@@ -26,11 +26,11 @@ jobs:
           need_build=false
           # Find directories containing Dockerfile but not containing .dockerfileignore
           while IFS= read -r dockerfile_dir; do
-              # if the Dockerfile has not changed, skip the build
-              if git diff --quiet --exit-code "$dockerfile_dir/Dockerfile"; then
-                continue
-              fi
-              need_build=true
+            # if the Dockerfile has not changed, skip the build
+            if git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q "$dockerfile_dir/Dockerfile"; then
+              continue
+            fi
+            need_build=true
           done < <(find . -type f -name Dockerfile -exec dirname {} \; | sort -u)
           if [ "$need_build" = false ]; then
             echo "No Dockerfile changed, skip the build"
@@ -68,8 +68,7 @@ jobs:
           # Find directories containing Dockerfile but not containing .dockerfileignore
           while IFS= read -r dockerfile_dir; do
               # if the Dockerfile has not changed, skip the build
-              if git diff --quiet --exit-code "$dockerfile_dir/Dockerfile"; then
-                echo $?
+              if ! git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep -q "$dockerfile_dir/Dockerfile"; then
                 continue
               fi
               # Check if .dockerfileignore exists in the directory
