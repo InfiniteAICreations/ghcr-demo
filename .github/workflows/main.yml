@@ -31,10 +31,10 @@ jobs:
       - name: Log-in to ghcr.io
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Extract Org and Repo Name
-        run: |
-          export DOCKER_BUILD_ORG=$(echo "${{ github.repository }}" | tr '[A-Z]' '[a-z]' | cut -d '/' -f 1)
-          export DOCKER_BUILD_REPO=$(echo "${{ github.repository }}" | tr '[A-Z]' '[a-z]' | cut -d '/' -f 2)
+#      - name: Extract Org and Repo Name
+#        run: |
+#          export DOCKER_BUILD_ORG=$(echo "${{ github.repository }}" | tr '[A-Z]' '[a-z]' | cut -d '/' -f 1)
+#          export DOCKER_BUILD_REPO=$(echo "${{ github.repository }}" | tr '[A-Z]' '[a-z]' | cut -d '/' -f 2)
 
       #      - name: Read version from VERSION file
 #        id: readv
@@ -45,6 +45,8 @@ jobs:
       - name: Build and push multi-arch container images
         run: |
           echo "==========="
+          DOCKER_BUILD_ORG=$(echo "${{ github.repository }}" | tr '[A-Z]' '[a-z]' | cut -d '/' -f 1)
+          DOCKER_BUILD_REPO=$(echo "${{ github.repository }}" | tr '[A-Z]' '[a-z]' | cut -d '/' -f 2)
           echo $DOCKER_BUILD_ORG
           echo $DOCKER_BUILD_REPO
           echo "==========="
