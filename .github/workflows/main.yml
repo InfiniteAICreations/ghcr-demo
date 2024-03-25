@@ -39,8 +39,15 @@ jobs:
 
       - name: Build and push multi-arch container images
         run: |
-          for dir in evaluation/SWE-bench opendevin/sandbox; do
-            cd $dir
-            make all
-            cd -
+          # Find directories containing Dockerfile but not containing .dockerfileignore
+          for dockerfile_dir in $(find . -type f -name Dockerfile -exec dirname {} \; | sort -u | grep -v "$(find . -type f -name .ignoredockerfile -exec dirname {} \; | sort -u)"); do
+              # Change directory and execute 'make all'
+              pushd $dockerfile_dir > /dev/null
+              make all
+              popd > /dev/null
           done
+#          for dir in evaluation/SWE-bench opendevin/sandbox; do
+#            cd $dir
+#            make all
+#            cd -
+#          done
