@@ -1,9 +1,9 @@
-REGISTRY=ghcr.io
-ORG=infiniteaicreations
-REPO=ghcr-demo
-TAG=v0.1
-FULL_IMAGE=$(REGISTRY)/$(ORG)/$(REPO):$(TAG)
-LATEST_FULL_IMAGE=$(REGISTRY)/$(ORG)/$(REPO):latest
+DOCKER_BUILD_REGISTRY ?= ghcr.io
+DOCKER_BUILD_ORG ?= infiniteaicreations
+DOCKER_BUILD_REPO ?= ghcr-demo
+DOCKER_BUILD_TAG ?= v0.1
+FULL_IMAGE=$(DOCKER_BUILD_REGISTRY)/$(DOCKER_BUILD_ORG)/$(DOCKER_BUILD_REPO):$(DOCKER_BUILD_TAG)
+LATEST_FULL_IMAGE=$(DOCKER_BUILD_REGISTRY)/$(DOCKER_BUILD_ORG)/$(DOCKER_BUILD_REPO):latest
 
 # normally, for local build testing or development. use cross platform build for sharing images to others.
 build:
