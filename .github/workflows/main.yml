@@ -50,7 +50,7 @@ jobs:
               if [ ! -f "$dockerfile_dir/.dockerfileignore" ]; then
                   # Change directory and execute 'make all'
                   pushd "$dockerfile_dir" > /dev/null
-                  make all
+                  make all DOCKER_BUILD_ORG=$DOCKER_BUILD_ORG DOCKER_BUILD_REPO=$DOCKER_BUILD_REPO
                   popd > /dev/null
               fi
           done < <(find . -type f -name Dockerfile -exec dirname {} \; | sort -u)
