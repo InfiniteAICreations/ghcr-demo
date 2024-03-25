@@ -21,6 +21,11 @@ jobs:
       - name: checkout
         uses: actions/checkout@v4
 
+      - name: Dump GitHub context
+        env:
+          GITHUB_CONTEXT: ${{ toJson(github) }}
+        run: echo "$GITHUB_CONTEXT"
+
       - name: Confirm Dockerfile is changed
         run: |
           need_build=false
