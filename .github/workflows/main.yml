@@ -48,7 +48,6 @@ jobs:
           DOCKER_BUILD_ORG=$(echo "${{ github.repository }}" | tr '[A-Z]' '[a-z]' | cut -d '/' -f 1)
           DOCKER_BUILD_REPO=$(echo "${{ github.repository }}" | tr '[A-Z]' '[a-z]' | cut -d '/' -f 2)
           echo $DOCKER_BUILD_ORG
-          echo $DOCKER_BUILD_REPO
           echo "==========="
           # Find directories containing Dockerfile but not containing .dockerfileignore
           while IFS= read -r dockerfile_dir; do
@@ -56,7 +55,7 @@ jobs:
               if [ ! -f "$dockerfile_dir/.dockerfileignore" ]; then
                   # Change directory and execute 'make all'
                   pushd "$dockerfile_dir" > /dev/null
-                  make all DOCKER_BUILD_ORG=$DOCKER_BUILD_ORG DOCKER_BUILD_REPO=$DOCKER_BUILD_REPO
+                  make all DOCKER_BUILD_ORG=$DOCKER_BUILD_ORG
                   popd > /dev/null
               fi
           done < <(find . -type f -name Dockerfile -exec dirname {} \; | sort -u)
