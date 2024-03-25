@@ -39,7 +39,6 @@ jobs:
 
       - name: Build and push multi-arch container images
         run: |
-          make all
           for dir in evaluation/SWE-bench opendevin/sandbox; do
             cd $dir
             make all
