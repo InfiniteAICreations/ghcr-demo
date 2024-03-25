@@ -53,6 +53,7 @@ jobs:
           while IFS= read -r dockerfile_dir; do
               # if the Dockerfile has not changed, skip the build
               if git diff --quiet --exit-code "$dockerfile_dir/Dockerfile"; then
+                echo $?
                 continue
               fi
               # Check if .dockerfileignore exists in the directory
