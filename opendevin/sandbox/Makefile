@@ -5,7 +5,7 @@ DOCKER_BUILD_TAG ?= v0.2
 FULL_IMAGE=$(DOCKER_BUILD_REGISTRY)/$(DOCKER_BUILD_ORG)/$(DOCKER_BUILD_REPO):$(DOCKER_BUILD_TAG)
 LATEST_FULL_IMAGE=$(DOCKER_BUILD_REGISTRY)/$(DOCKER_BUILD_ORG)/$(DOCKER_BUILD_REPO):latest
 
-# normally, for local build testing or development. use cross platform build for sharing images to others.
+# normally,  for local build testing or development. use cross platform build for sharing images to others.
 build:
 	docker build -f Dockerfile -t ${FULL_IMAGE} -t ${LATEST_FULL_IMAGE} .
 
