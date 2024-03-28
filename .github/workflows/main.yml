@@ -3,19 +3,17 @@ name: Build and publish multi-arch container images
 on:
   push:
     branches: [ main ]
-    paths:
-      - '**/Dockerfile'
   workflow_dispatch:
     inputs:
       reason:
-        description: 'Why ?'
+        description: 'Reason for manual trigger'
         required: false
         default: ''
 
 jobs:
   ghr_push:
     runs-on: ubuntu-latest
-    if: github.event_name == 'push'
+    if: github.event_name == 'push' || github.event.inputs.reason != ''
 
     steps:
       - name: checkout
@@ -25,23 +23,6 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-
-      - name: Confirm Dockerfile is changed
-        run: |
-          need_build=false
-          # Find directories containing Dockerfile but not containing .dockerfileignore
-          while IFS= read -r dockerfile_dir; do
-            # if the Dockerfile has not changed, skip the build
-            git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep "$dockerfile_dir/Dockerfile"
-            if [ $? -eq 0 ]; then
-              need_build=true
-              break
-            fi
-          done < <(find . -type f -name Dockerfile -exec dirname {} \; | sort -u)
-          if [ "$need_build" = false ]; then
-            echo "No Dockerfile changed, skip the build"
-            exit 0;
-          fi
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
