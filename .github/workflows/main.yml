@@ -51,6 +51,13 @@ jobs:
           DOCKER_BUILD_ORG=$(echo "${{ github.repository }}" | tr '[A-Z]' '[a-z]' | cut -d '/' -f 1)
           # Find directories containing Dockerfile but not containing .dockerfileignore
           while IFS= read -r dockerfile_dir; do
+          
+            # Check if .dockerfileignore exists in the directory
+            if [ -f "$dockerfile_dir/.dockerfileignore" ]; then
+                echo "$dockerfile_dir/.dockerfileignore exists, skipping build and push"
+                continue
+            fi
+          
             # Check if image was already exist in ghcr.io
             FULL_IMAGE=$(make get-full-image DOCKER_BUILD_ORG=$DOCKER_BUILD_ORG)
             EXISTS=$(docker manifest inspect "$FULL_IMAGE" > /dev/null 2>&1 && echo "true" || echo "false")
@@ -58,13 +65,10 @@ jobs:
               echo "Image $FULL_IMAGE already exists in ghcr.io, skipping build and push"
               continue
             fi
-            # Check if .dockerfileignore exists in the directory
-            if [ ! -f "$dockerfile_dir/.dockerfileignore" ]; then
-              # Change directory and execute 'make all'
-              pushd "$dockerfile_dir" > /dev/null
-              make all DOCKER_BUILD_ORG=$DOCKER_BUILD_ORG
-              popd > /dev/null
-            fi
+          
+            pushd "$dockerfile_dir" > /dev/null
+            make all DOCKER_BUILD_ORG=$DOCKER_BUILD_ORG
+            popd > /dev/null
           done < <(find . -type f -name Dockerfile -exec dirname {} \; | sort -u)
 
 #          # Find directories containing Dockerfile but not containing .dockerfileignore
