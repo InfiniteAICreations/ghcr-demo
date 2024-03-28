@@ -47,25 +47,17 @@ jobs:
 
       - name: Build and push multi-arch container images
         run: |
-          echo "==========="
+          # set env for fork repo
           DOCKER_BUILD_ORG=$(echo "${{ github.repository }}" | tr '[A-Z]' '[a-z]' | cut -d '/' -f 1)
-          DOCKER_BUILD_REPO=$(echo "${{ github.repository }}" | tr '[A-Z]' '[a-z]' | cut -d '/' -f 2)
-          echo $DOCKER_BUILD_ORG
-          echo "==========="
           # Find directories containing Dockerfile but not containing .dockerfileignore
           while IFS= read -r dockerfile_dir; do
-              # if the Dockerfile has not changed, skip the build
-              git diff --name-only ${{ github.event.before }} ${{ github.sha }} | grep "$dockerfile_dir/Dockerfile"
-              if [ $? -eq 1 ]; then
-                continue
-              fi
-              # Check if .dockerfileignore exists in the directory
-              if [ ! -f "$dockerfile_dir/.dockerfileignore" ]; then
-                  # Change directory and execute 'make all'
-                  pushd "$dockerfile_dir" > /dev/null
-                  make all DOCKER_BUILD_ORG=$DOCKER_BUILD_ORG
-                  popd > /dev/null
-              fi
+            # Check if .dockerfileignore exists in the directory
+            if [ ! -f "$dockerfile_dir/.dockerfileignore" ]; then
+              # Change directory and execute 'make all'
+              pushd "$dockerfile_dir" > /dev/null
+              make all DOCKER_BUILD_ORG=$DOCKER_BUILD_ORG
+              popd > /dev/null
+            fi
           done < <(find . -type f -name Dockerfile -exec dirname {} \; | sort -u)
 
 #          # Find directories containing Dockerfile but not containing .dockerfileignore
