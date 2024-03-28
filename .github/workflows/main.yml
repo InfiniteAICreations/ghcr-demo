@@ -7,7 +7,7 @@ on:
     inputs:
       reason:
         description: 'Reason for manual trigger'
-        required: false
+        required: true
         default: ''
 
 jobs:
