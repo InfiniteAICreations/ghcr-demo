@@ -59,7 +59,9 @@ jobs:
             fi
           
             # Check if image was already exist in ghcr.io
+            pushd "$dockerfile_dir" > /dev/null
             FULL_IMAGE=$(make get-full-image DOCKER_BUILD_ORG=$DOCKER_BUILD_ORG)
+            popd > /dev/null
             EXISTS=$(docker manifest inspect "$FULL_IMAGE" > /dev/null 2>&1 && echo "true" || echo "false")
             if [ "$EXISTS" == "true" ]; then
               echo "Image $FULL_IMAGE already exists in ghcr.io, skipping build and push"
