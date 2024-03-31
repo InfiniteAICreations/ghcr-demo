@@ -11,18 +11,13 @@ on:
         default: ''
 
 jobs:
-  ghr_push:
+  ghcr_build_and_push:
     runs-on: ubuntu-latest
     if: github.event_name == 'push' || github.event.inputs.reason != ''
 
     steps:
       - name: checkout
         uses: actions/checkout@v4
-
-      - name: Dump GitHub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -33,17 +28,6 @@ jobs:
 
       - name: Log-in to ghcr.io
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
-
-#      - name: Extract Org and Repo Name
-#        run: |
-#          export DOCKER_BUILD_ORG=$(echo "${{ github.repository }}" | tr '[A-Z]' '[a-z]' | cut -d '/' -f 1)
-#          export DOCKER_BUILD_REPO=$(echo "${{ github.repository }}" | tr '[A-Z]' '[a-z]' | cut -d '/' -f 2)
-
-      #      - name: Read version from VERSION file
-#        id: readv
-#        uses: jaywcjlove/github-action-read-file@v2
-#        with:
-#          path: opendevin/sandbox/VERSION
 
       - name: Build and push multi-arch container images
         run: |
@@ -68,21 +52,8 @@ jobs:
               continue
             fi
           
+            # Build and push the image to ghcr.io
             pushd "$dockerfile_dir" > /dev/null
             make all DOCKER_BUILD_ORG=$DOCKER_BUILD_ORG
             popd > /dev/null
           done < <(find . -type f -name Dockerfile -exec dirname {} \; | sort -u)
-
-#          # Find directories containing Dockerfile but not containing .dockerfileignore
-#          for dockerfile_dir in $(find . -type f -name Dockerfile -exec dirname {} \; | sort -u | grep -v "$(find . -type f -name .dockerfileignore -exec dirname {} \; | sort -u)"); do
-#              # Change directory and execute 'make all'
-#              pushd $dockerfile_dir > /dev/null
-#              make all
-#              popd > /dev/null
-#          done
-
-#          for dir in evaluation/SWE-bench opendevin/sandbox; do
-#            cd $dir
-#            make all
-#            cd -
-#          done
