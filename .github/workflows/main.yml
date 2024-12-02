@@ -15,9 +15,11 @@ jobs:
     if: github.event_name == 'push' || github.event.inputs.reason != ''
 
     steps:
+      - name: checkout
+        uses: actions/checkout@v4
+
       - name: Build Docker image
         run: |
-          REPO_OWNER_LOWERCASE=$(echo "${{ github.repository_owner }}" | tr '[:upper:]' '[:lower:]')
           docker build -t ghcr.io/infiniteaicreations/ghcr-demo:latest .
 
       - name: Log-in to ghcr.io
