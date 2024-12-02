@@ -25,4 +25,4 @@ jobs:
 
       - name: Build and push multi-arch container images
         run: |
-          docker push ghcr.io/InfiniteAICreations/ghcr-demo:latest
+          docker push ghcr.io/infiniteaicreations/ghcr-demo:latest
